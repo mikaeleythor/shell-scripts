@@ -1,0 +1,38 @@
+#!/bin/bash
+
+device_id () {
+    DEVICE=$1; shift
+    echo $@ | awk '{print $8}' | if [[ "$@" = "" ]]; then echo $DEVICE; else echo $@; fi;
+}
+
+active_monitor () {
+    if [[ "$(connected-DVI-monitors)" = "" ]]; then echo 'eDP1'; else echo $(connected-DVI-monitors); fi
+}
+
+STYLUS=$( device_id "stylus" "$( xsetwacom --list devices | awk '$0 ~ /stylus/ {print $8}')" )
+PAD=$( device_id 'pad' $( xsetwacom --list devices | awk '$0 ~ /pad/ {print $8}') )
+ERASER=$( device_id 'eraser' $( xsetwacom --list devices | awk '$0 ~ /eraser/ {print $8}') )
+CURSOR=$( device_id 'cursor' $( xsetwacom --list devices | awk '$0 ~ /cursor/ {print $8}') )
+#MONITOR=$( active_monitor )
+MONITOR='eDP1'
+
+# Configure pen buttons
+xsetwacom --set "$STYLUS" button 1 'button +1'
+xsetwacom --set "$STYLUS" button 2 'key shift ctrl r'
+xsetwacom --set "$STYLUS" button 3 'key shift ctrl p'
+
+# Configure pad buttons
+xsetwacom --set "$PAD" button 1 'key del'
+xsetwacom --set "$PAD" button 2 'key +ctrl +v'
+xsetwacom --set "$PAD" button 3 'key ctrl +c'
+xsetwacom --set "$PAD" button 8 'key +ctrl +z'
+
+# Configure pan sensitivity
+
+xsetwacom --set "$STYLUS" PanScrollThreshold 400
+
+# Map devices to output
+xsetwacom --set "$STYLUS" MapToOutput "$MONITOR"
+xsetwacom --set "$PAD" MapToOutput "$MONITOR"
+xsetwacom --set "$ERASER" MapToOutput "$MONITOR"
+xsetwacom --set "$CURSOR" MapToOutput "$MONITOR"
