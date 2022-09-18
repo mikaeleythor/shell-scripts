@@ -1,0 +1,35 @@
+#!/bin/bash
+
+### This script copies and modifies an exercise report template to 
+### $( pwd )/<Exercise Report Title>/<Exercise Report Title>.tex
+ 
+TITLE=$1
+TEMPLATE_DIR='/usr/local/share/latex-cover-letter/'
+TEMPLATE="$TEMPLATE_DIR"'cover-letter-template.tex'
+FILE_REL="$TITLE/$TITLE.tex"
+
+APPLICANT_FNAME="Eyþór Mikael"
+APPLICANT_LNAME="Eyþórsson"
+APPLICANT_EMAIL="eythore19@ru.is"
+
+if [[ $TITLE ]]; then
+    mkdir $TITLE
+    touch $FILE_REL
+
+    read -p 'Job title: ' JOB_TITLE
+    read -p 'Letter title: ' LETTER_TITLE
+    read -p 'Greet the recipient (sæll helgi): ' GREET_RECIPIENT
+
+    cat $TEMPLATE |
+        sed "s/JOB_TITLE/$JOB_TITLE/" |
+        sed "s/LETTER_TITLE/$LETTER_TITLE/" |
+        sed "s/APPLICANT_FNAME/$APPLICANT_FNAME/" |
+        sed "s/APPLICANT_LNAME/$APPLICANT_LNAME/" |
+        sed "s/APPLICANT_EMAIL/$APPLICANT_EMAIL/g" |
+        sed "s/GREET_RECIPIENT/$GREET_RECIPIENT/" \
+            > $FILE_REL
+    cp $TEMPLATE_DIR'file-setup.tex' $TITLE 
+
+else
+    echo 'No Cover Letter Title specified'
+fi

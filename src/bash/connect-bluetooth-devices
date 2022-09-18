@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DEV=$1
+
+BUDS='1C:E6:1D:C5:A0:02'
+JBL='88:D0:39:2D:42:F5'
+
+bluetoothctl power on && \
+if [[ $DEV ]]; then
+    if [[ "$DEV" = "JBL" ]]; then
+        bluetoothctl connect $JBL
+    elif [[ "$DEV" = "BUDS" ]]; then
+        bluetoothctl connect $BUDS
+    fi
+else
+    if [[ $( bluetoothctl connect $BUDS ) ]]; then
+        echo BUDS
+    elif [[ $( bluetoothctl connect $JBL ) ]]; then
+        echo JBL
+    else
+        echo 'Failed'
+    fi
+fi
