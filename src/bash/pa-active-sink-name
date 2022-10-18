@@ -1,0 +1,13 @@
+#!/bin/bash
+
+occurrencenum=$(pacmd list-sinks | grep 'index' | grep -n '* index' | awk -F ':' '{print $1}')
+pacmd list-sinks | grep 'device.description' | sed "${occurrencenum}q;d" | awk -F ' = ' '{print $NF}' | sed 's/"//g'
+
+# # Find line of active index marker
+# indexline=$(pacmd list-sinks | grep -n '* index:' | awk -F ':' '{print $1}')
+
+# # The name of the active sink will be in the line below
+# nameline=$(($indexline+1))
+
+# # Filter the output
+# pacmd list-sinks | sed "${nameline}q;d" | awk -F '.' '{print $NF}' | sed 's/>//'
