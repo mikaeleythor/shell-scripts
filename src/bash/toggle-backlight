@@ -1,0 +1,17 @@
+#!/bin/bash
+
+BACKLIGHT_FILE="$HOME/.local/share/.backlight"
+if [[ -e "$BACKLIGHT_FILE" ]]; then
+  SAVED_BACKLIGHT="$( cat $BACKLIGHT_FILE )"
+fi
+
+if [[ "$( light )" = "0.00" ]]; then
+  if [[ -z "$SAVED_BACKLIGHT" ]]; then
+    light -S 50
+  else
+    light -S $SAVED_BACKLIGHT
+  fi
+else
+  echo "$( light )" > $BACKLIGHT_FILE
+  light -S 0
+fi
