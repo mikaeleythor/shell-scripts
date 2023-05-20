@@ -1,14 +1,28 @@
 #!/bin/bash
 
-STYLUS="Wacom Intuos BT S Pen stylus"
-PAD="Wacom Intuos BT S Pad pad"
-ERASER="Wacom Intuos BT S Pen eraser"
-CURSOR="Wacom Intuos BT S Pen cursor"
-MONITOR="DVI-I-1-1"
+device_id () {
+    DEVICE=$1; shift
+    echo "$@" | awk '{print $8}' | \
+        if [[ "$1" = "" ]]; \
+        then echo "$DEVICE"; \
+        else echo "$@"; \
+        fi;
+}
 
-xrandr --output $MONITOR --rotate normal
-xrandr --output $MONITOR --right-of eDP-1
-xrandr --output $MONITOR --pos 1920x0
+STYLUS="$( device_id "stylus" "$( xsetwacom --list devices | \
+    awk '$0 ~ /stylus/ {print $8}')" )"
+
+PAD="$( device_id 'pad' "$( xsetwacom --list devices | \
+    awk '$0 ~ /pad/ {print $8}')" )"
+
+ERASER="$( device_id 'eraser' "$( xsetwacom --list devices | \
+    awk '$0 ~ /eraser/ {print $8}')" )"
+
+CURSOR="$( device_id 'cursor' "$( xsetwacom --list devices | \
+    awk '$0 ~ /cursor/ {print $8}')" )"
+
+MONITOR=$( connected-primary-monitor )
+
 
 # Run default Wacom settings
 
@@ -16,7 +30,7 @@ init-wacom
 
 # Map devices to output
 
-xsetwacom --set $STYLUS MapToOutput $MONITOR
-xsetwacom --set $PAD MapToOutput $MONITOR
-xsetwacom --set $ERASER MapToOutput $MONITOR
-xsetwacom --set $CURSOR MapToOutput $MONITOR
+xsetwacom --set "$STYLUS" MapToOutput "$MONITOR"
+xsetwacom --set "$PAD" MapToOutput "$MONITOR"
+xsetwacom --set "$ERASER" MapToOutput "$MONITOR"
+xsetwacom --set "$CURSOR" MapToOutput "$MONITOR"

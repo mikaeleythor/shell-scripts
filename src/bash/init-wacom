@@ -6,15 +6,15 @@ device_id () {
 }
 
 active_monitor () {
-    if [[ "$(connected-DVI-monitors)" = "" ]]; then echo 'eDP1'; else echo $(connected-DVI-monitors); fi
+  if [[ -z "$(connected-DVI-monitors)" ]]; then echo $(connected-primary-monitor); else echo $(connected-DVI-monitors); fi
 }
 
 STYLUS=$( device_id "stylus" "$( xsetwacom --list devices | awk '$0 ~ /stylus/ {print $8}')" )
 PAD=$( device_id 'pad' $( xsetwacom --list devices | awk '$0 ~ /pad/ {print $8}') )
 ERASER=$( device_id 'eraser' $( xsetwacom --list devices | awk '$0 ~ /eraser/ {print $8}') )
 CURSOR=$( device_id 'cursor' $( xsetwacom --list devices | awk '$0 ~ /cursor/ {print $8}') )
-#MONITOR=$( active_monitor )
-MONITOR='eDP1'
+MONITOR=$( active_monitor )
+#MONITOR='eDP1'
 
 # Configure pen buttons
 xsetwacom --set "$STYLUS" button 1 'button +1'
@@ -32,7 +32,9 @@ xsetwacom --set "$PAD" button 8 'key +ctrl +z'
 xsetwacom --set "$STYLUS" PanScrollThreshold 400
 
 # Map devices to output
-xsetwacom --set "$STYLUS" MapToOutput "$MONITOR"
-xsetwacom --set "$PAD" MapToOutput "$MONITOR"
-xsetwacom --set "$ERASER" MapToOutput "$MONITOR"
-xsetwacom --set "$CURSOR" MapToOutput "$MONITOR"
+#xsetwacom --set "$STYLUS" MapToOutput "$MONITOR"
+#xsetwacom --set "$PAD" MapToOutput "$MONITOR"
+#xsetwacom --set "$ERASER" MapToOutput "$MONITOR"
+#xsetwacom --set "$CURSOR" MapToOutput "$MONITOR"
+
+bspc config focus_follows_pointer true
