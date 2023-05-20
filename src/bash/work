@@ -1,0 +1,5 @@
+#!/bin/bash
+
+bspc rule -a \* -o state=tiled desktop=^3 && flatpak run com.github.ransome1.sleek > /dev/null 2>&1 & disown;
+bspc rule -a \* -o state=tiled desktop=^3 split_ratio=.7 && flatpak run com.lakoliu.Furtherance > /dev/null 2>&1 & disown;
+bspc rule -a \* -o state=tiled desktop=^3 && flatpak run org.gnome.Solanum &> /dev/null 2>&1 & disown;
