@@ -13,6 +13,8 @@ if [[ -n "$DEV" ]]; then
         bluetoothctl connect $JBL
     elif [[ "$DEV" = "BUDS" ]]; then
         bluetoothctl connect $BUDS
+    elif [[ "$DEV" = "BOSE" ]]; then
+        bluetoothctl connect "Soundlink"
     fi
 else
     echo "No device specified!"
