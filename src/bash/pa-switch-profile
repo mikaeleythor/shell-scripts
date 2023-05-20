@@ -1,0 +1,3 @@
+#!/bin/bash
+
+pacmd set-card-profile "$(pa-active-sink)" "$1"
