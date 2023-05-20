@@ -1,0 +1,14 @@
+#!/bin/bash
+
+xset s off         # don't activate screensaver
+xset -dpms         # disable DPMS (Energy Star) features.
+xset s noblank     # don't blank the video device
+
+# Set up hdmi
+xrandr --output $1 --mode 1920x1080 "--$2-of" "$(connected-primary-monitor)" && bspc monitor $1 -d VII
+
+# Set audio output to hdmi sink
+pacmd load-module module-alsa-sink device=hw:0,8
+
+# Prevent closing lid from initializing sleep
+systemd-inhibit --what=handle-lid-switch sleep 1d
